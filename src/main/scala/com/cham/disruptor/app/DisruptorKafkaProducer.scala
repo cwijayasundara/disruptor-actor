@@ -29,6 +29,7 @@ case class ValueEventTweetTranslator(inTweet: ValueEventTweet) extends EventTran
   }
 }
 
+// consumer of events from the Disruptor
 class ValueEventTweetHandler() extends EventHandler[ValueEventTweet] {
 
   val kafkaProducer: KafkaMessageProducer = new KafkaMessageProducer
@@ -40,19 +41,22 @@ class ValueEventTweetHandler() extends EventHandler[ValueEventTweet] {
 
 object DisruptorExecutor extends App {
 
-    val ring_size: Int = 1024 * 16
-    val executor = Executors.newFixedThreadPool(10)
+    val ring_size: Int = 1024 * 128
+
+    val executor = Executors.newCachedThreadPool()
 
     val blockingWaitStrategy:BlockingWaitStrategy = new BlockingWaitStrategy
+
+    val nonBlockingWaitStretegy:BusySpinWaitStrategy = new BusySpinWaitStrategy
 
     val factory = new EventFactory[ValueEventTweet] {
       override def newInstance(): ValueEventTweet = ValueEventTweet(0L,"0","0")
     }
-
+    // instance of the handler
     val handler = new ValueEventTweetHandler
 
-    val disruptor = new Disruptor[ValueEventTweet](factory,ring_size,executor,ProducerType.MULTI,blockingWaitStrategy)
-
+    val disruptor = new Disruptor[ValueEventTweet](factory,ring_size,executor,ProducerType.SINGLE,nonBlockingWaitStretegy)
+    // link disruptor to handler
     disruptor.handleEventsWith(handler)
 
     disruptor.start()
@@ -62,12 +66,13 @@ object DisruptorExecutor extends App {
     println("started..")
 
     for (i <- 1 to 100) {
+      // publish events to discruptor that will be handed by the handler
       disruptor.publishEvent(ValueEventTweetTranslator(inTweetToDisruptor))
     }
 
     val end = Instant.now
     val timeElapsed = Duration.between(start, end)
-    println("Time taken is : " + timeElapsed.toMillis + " milliseconds")
+    println("Time taken is to publish to Kafka is : " + timeElapsed.toMillis + " milliseconds")
 
     disruptor.shutdown()
     executor.shutdown()

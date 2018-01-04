@@ -32,7 +32,7 @@ class KafkaConsumerActor extends Actor with ActorLogging  {
   def consumeFromDirectKafka(): Unit ={
     println("inside consumeFromDirectKafka" )
     try {
-      // infinite loop. App need pooling for the messages. Need to close the consumer while testing.
+      // infinite loop. App need pooling for messages. Need to close the consumer while testing.
       while (true) {
 
         val tweetSet = kafkaConsumer.poll(100)

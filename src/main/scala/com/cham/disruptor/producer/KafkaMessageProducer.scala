@@ -2,6 +2,7 @@ package com.cham.disruptor.producer
 
 import java.util.Properties
 
+import akka.actor.Actor
 import com.cham.disruptor.app.ValueEventTweet
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig, ProducerRecord}
 

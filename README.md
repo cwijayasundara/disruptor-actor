@@ -47,13 +47,13 @@ list all the Cassandra key spaces:
 Stats running the code in my machine (MacOsX- High Sierra 10.13.2; 2.2 GHz Intel Core i7)
 
 10,000 messages
-    push to kafka: 74 milli seconds
-    save to cassandra : 34 milliseconds
+    - push to kafka: 74 milli seconds
+    - save to cassandra : 34 milliseconds
 
 100,000 messages
-    push to kafka: : 22077 milliseconds (22 seconds)
-    save to cassandra: 250 milliseconds
+    - push to kafka: : 22077 milliseconds (22 seconds)
+    - save to cassandra: 250 milliseconds
 
 1,000,000 messages
-    push to kafka: : 215125 milliseconds (215.125 secs)
-    save to cassandra: 2000 milliseconds
+    - push to kafka: : 215125 milliseconds (215.125 secs)
+    - save to cassandra: 2000 milliseconds

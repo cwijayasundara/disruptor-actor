@@ -15,11 +15,11 @@ object CassandraDaoActorBuilder {
 class CassandraDaoActor extends Actor with ActorLogging{
 
   implicit val session = new Cluster
-  .Builder()
-    .addContactPoints("127.0.0.1")
-    .withPort(9042)
-    .build()
-    .connect()
+                        .Builder()
+                        .addContactPoints("127.0.0.1")
+                        .withPort(9042)
+                        .build()
+                        .connect()
 
   def saveToCassandra(message: TweetMessage): Unit= {
 
