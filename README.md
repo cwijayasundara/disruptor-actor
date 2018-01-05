@@ -46,14 +46,34 @@ list all the Cassandra key spaces:
 
 Stats running the code in my machine (MacOsX- High Sierra 10.13.2; 2.2 GHz Intel Core i7)
 
-10,000 messages
-    - push to kafka: 74 milli seconds
-    - save to cassandra : 34 milliseconds
+10,000
 
-100,000 messages
-    - push to kafka: : 22077 milliseconds (22 seconds)
-    - save to cassandra: 250 milliseconds
+    Time taken is to publish to Kafka is : 74 milliseconds
+    Time taken to consume and update Cassandra: 34 milliseconds (actors work for few more secs in the background)
 
-1,000,000 messages
-    - push to kafka: : 215125 milliseconds (215.125 secs)
-    - save to cassandra: 2000 milliseconds
+100,000
+
+    Time taken is to publish to Kafka is : 22077 milliseconds - 22 secs
+    Time taken to consume and update Cassandra: 230 milliseconds (actors work for few more secs in the background)
+
+1,000,000
+
+    Time taken is to publish to Kafka is : 215125 milliseconds (215.125 secs)
+    Time taken to consume and update Cassandra: 2000 milliseconds (actors work for few more secs in the background)
+    
+After optimising the producer (convert the producers to actors + change the Disruptor publisher stretegy)
+
+10,000
+
+    Time taken is to publish to Kafka is : 8 milliseconds (actors work for few more secs in the background)
+    Time taken to consume and update Cassandra: 30 milliseconds (actors work for few more secs in the background)
+
+100,000
+
+    Time taken is to publish to Kafka is : 23 milliseconds (actors work for few more secs in the background)
+    Time taken to consume and update Cassandra: 230 milliseconds (actors work for few more secs in the background)
+
+1,000,000
+
+    Time taken is to publish to Kafka is : 365 milliseconds  (actors work for few more secs/mins in the background)
+    Time taken to consume and update Cassandra: 2000 milliseconds (actors work for few more secs in the background)
