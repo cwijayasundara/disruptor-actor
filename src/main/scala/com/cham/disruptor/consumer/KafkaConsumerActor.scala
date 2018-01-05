@@ -1,8 +1,11 @@
 package com.cham.disruptor.consumer
 
+/**
+  * Created by cwijayasundara on 27/12/2017.
+  */
+
 import java.util.{Collections, Properties}
 import java.time.{Duration, Instant}
-
 import akka.actor.{Actor, ActorLogging}
 import akka.util.Timeout
 import com.cham.disruptor.dao.CassandraDaoActorBuilder

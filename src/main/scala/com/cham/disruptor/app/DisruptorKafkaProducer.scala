@@ -1,17 +1,17 @@
 package com.cham.disruptor.app
 
 /**
-  * Created by cwijayasundara on 08/12/2017.
+  * Created by cwijayasundara on 27/12/2017.
   */
 
 import java.time.{Duration, Instant}
 import java.util.concurrent.Executors
-
-import com.cham.disruptor.producer.KafkaMessageProducer
+import akka.actor.ActorSystem
+import akka.util.Timeout
+import com.cham.disruptor.producer.{KafkaMessageProducerActorBuilder}
 import com.google.gson.Gson
 import com.lmax.disruptor._
 import com.lmax.disruptor.dsl.{Disruptor, ProducerType}
-
 
 case class ValueEventTweet(var id: Long, var tweet: String, var user: String){
   override def toString: String = {
@@ -32,10 +32,13 @@ case class ValueEventTweetTranslator(inTweet: ValueEventTweet) extends EventTran
 // consumer of events from the Disruptor
 class ValueEventTweetHandler() extends EventHandler[ValueEventTweet] {
 
-  val kafkaProducer: KafkaMessageProducer = new KafkaMessageProducer
+  // create the ActorSystem
+  implicit val system = ActorSystem()
+  // create an instance of the kafkaProducerActor
+  val kafkaProducerActor = system.actorOf(KafkaMessageProducerActorBuilder.props(Timeout.zero), KafkaMessageProducerActorBuilder.name)
 
   override def onEvent(event: ValueEventTweet, sequence: Long, endOfBatch: Boolean): Unit = {
-    kafkaProducer.publishMessagesToKafka(event)
+    kafkaProducerActor ! event
   }
 }
 
@@ -47,7 +50,7 @@ object DisruptorExecutor extends App {
 
     val blockingWaitStrategy:BlockingWaitStrategy = new BlockingWaitStrategy
 
-    val nonBlockingWaitStretegy:BusySpinWaitStrategy = new BusySpinWaitStrategy
+    val busySpinWaitStretegy:BusySpinWaitStrategy = new BusySpinWaitStrategy
 
     val factory = new EventFactory[ValueEventTweet] {
       override def newInstance(): ValueEventTweet = ValueEventTweet(0L,"0","0")
@@ -55,7 +58,7 @@ object DisruptorExecutor extends App {
     // instance of the handler
     val handler = new ValueEventTweetHandler
 
-    val disruptor = new Disruptor[ValueEventTweet](factory,ring_size,executor,ProducerType.SINGLE,nonBlockingWaitStretegy)
+    val disruptor = new Disruptor[ValueEventTweet](factory,ring_size,executor,ProducerType.SINGLE,busySpinWaitStretegy)
     // link disruptor to handler
     disruptor.handleEventsWith(handler)
 
@@ -65,7 +68,7 @@ object DisruptorExecutor extends App {
     val start = Instant.now
     println("started..")
 
-    for (i <- 1 to 100) {
+    for (i <- 1 to 1000000) {
       // publish events to discruptor that will be handed by the handler
       disruptor.publishEvent(ValueEventTweetTranslator(inTweetToDisruptor))
     }
