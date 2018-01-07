@@ -49,7 +49,6 @@ class KafkaConsumerActor extends Actor with ActorLogging  {
           while (recordsIterator.hasNext) {
             val tweetRecord = recordsIterator.next().value()
             // TODO : get the record and set to TweetMessage object
-            // println(tweetRecord)
             // temp: hard coded to get the write working
             var tweetMessage: TweetMessage = new TweetMessage(1, "I love Scala", "Chaminda W")
 
@@ -72,7 +71,6 @@ class KafkaConsumerActor extends Actor with ActorLogging  {
           println("Time taken to push " + tweetSet.count() + " tweets is " + timeElapsed.toMillis + " milliseconds")
         }
         else {
-          //println("No more tweets to consume..")
         }
       }
     }finally {

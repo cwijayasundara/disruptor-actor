@@ -7,12 +7,31 @@ The problem this tries to solve is:
 Say Obama has 100 million followers. When he tweet how do you notify all his floowers of the event?
 This might involves updating 100 million records on the back of Obama's tweet.
 
-Design: << to do>>
+Design:
+
+Message production:
+
+- Single threaded producer push messages to disruptor / ring buffer. 
+    - Single producer to the Disruptor (ProducerType.SINGLE)
+    - BusySpinWaitStrategy (non blocking producer stretegy)
+    - ring size (1024 * 128)
+    - Increasing the ring size will improve the performance but under heavy load, messages can be lost (as Disruptor is in memory)
+    - So set the ring size = number of event you want to process
+    - If the number of events are large, then producer will wait till it gets a slot in case the ring buffer is full.
+- Kafka message producer is an Actor.
+    - Actors (run on many threads in parellel) picks up messages off the Disruptor.
+    - Push these messages to the Kafka topic.
+    
+Message consumption
+
+- Consumers off Kafka are Actors that run on multiple threads in parellel.
+- These actors consume messages and save in Cassandra.
+- Cassandra actor uses sync executor for the moment (session.execute(cqlInsert)) vs session.executeAsync() that returns a Future
 
 Set Up:
 
 Starting Zookeper:
-go to zookeeper/3.4.10/bin
+    go to zookeeper/3.4.10/bin
     Server start
 
 start kafka: go to kafka/0.11.0.1/bin
