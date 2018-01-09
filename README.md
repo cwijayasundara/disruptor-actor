@@ -9,7 +9,7 @@ This might involves updating 100 million records on the back of Obama's tweet.
 
 Design:
 
-Disgram in : https://www.linkedin.com/pulse/stab-twitter-low-latency-execution-engine-chaminda-wijayasundara/?published=t
+Diagram in : https://www.linkedin.com/pulse/stab-twitter-low-latency-execution-engine-chaminda-wijayasundara/?published=t
 
 Message production:
 
