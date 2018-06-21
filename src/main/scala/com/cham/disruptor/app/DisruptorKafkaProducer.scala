@@ -68,7 +68,7 @@ object DisruptorExecutor extends App {
     val start = Instant.now
     println("started..")
 
-    for (i <- 1 to 1000000) {
+    for (i <- 1 to 10) {
       // publish events to discruptor that will be handed by the handler
       disruptor.publishEvent(ValueEventTweetTranslator(inTweetToDisruptor))
     }

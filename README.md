@@ -34,7 +34,7 @@ Set Up:
 
 Starting Zookeper:
     go to zookeeper/3.4.10/bin
-    Server start
+    zkServer start
 
 start kafka: go to kafka/0.11.0.1/bin
 

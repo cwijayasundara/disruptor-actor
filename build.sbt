@@ -14,7 +14,8 @@ libraryDependencies ++= {
     "com.typesafe.akka" % "akka-cluster_2.11" % "2.4.14" withSources(),
     "com.lmax" % "disruptor" % "3.3.6" withSources(),
     "com.datastax.cassandra"  % "cassandra-driver-core" % "3.0.0"  exclude("org.xerial.snappy", "snappy-java"),
-    "io.spray" %%  "spray-json" % "1.3.3"
+    "io.spray" %%  "spray-json" % "1.3.3",
+     "com.hazelcast.jet" % "hazelcast-jet" % "0.6"
   )
 }
 
